@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <style>
+        #rahmen{
+            position:absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        #iframe1{
+            z-index: 1;
+        }
+        
+        #iframe2{
+            z-index: 2;
+        }
+        
+        #iframe_externes{
+            z-index: 0;
+            display: none;
+        }
+
+        .Vordergrund {
+            z-index: 5;
+        }
+
+        .Hintergrund {
+            z-index: 1;
+            display: none;
+        }
+
+        .iframes {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        </style>
+        <script>
+
+            /** Festlegung der Parameter */
+            
+            /* Anzeigezeit der aktuellen Seite */
+            var delay = 3000; 
+
+
+            /* Init */
+            var Seiten = new Array("page1.htm","page2.htm","page3.htm","http://www.uni-greifswald.de");
+            var SeitenPointer = 0;
+            var interval_ = "";
+            var init = function () {
+                var iframe1 = document.getElementById("iframe1");
+                var iframe2 = document.getElementById("iframe2");
+                var frame_externes = document.getElementById("iframe_externes");
+                hintergrundladen(naechsteSeite());
+                interval_ = setInterval(circle,delay);
+                
+            }
+            window.onload = init;
+
+            function circle() {
+                if (iframe1.classList.contains("Vordergrund") && iframe2.classList.contains("geladen") ) {
+                    /* 
+                        iframe1 ist im Vordergrund.
+                        -> mache iframe2 in den Vordergrund
+                        -> mache iframe1 in den Hintergrund
+                        -> lade die nächste Seite im Hintergrund
+                    */ 
+                    console.log("2");
+                    inHintergrund(iframe1);
+                    inVordergrund(iframe2);
+                    hintergrundladen(naechsteSeite());
+                } 
+                else if (iframe2.classList.contains("Vordergrund") && iframe1.classList.contains("geladen")) {
+                    console.log("1");
+                    inHintergrund(iframe2);
+                    inVordergrund(iframe1);
+                    hintergrundladen(naechsteSeite());
+                }
+                else {
+                    console.log ("Fehler: Kein iframe um dahin zu wechseln. \n iframe1.geladen = " + iframe1.classList.contains("geladen") + ", iframe2.geladen = " + iframe2.classList.contains("geladen"));
+                    hintergrundladen(naechsteSeite());
+                }
+            }
+
+            function hintergrundladen (src,zielframe) {
+                /* Je nach dem, ob ein String (eine url) oder ein Objekt übergeben wurde, mit der passenden Methode den Hintergrundframe vorladen. 
+                   ungenau: Typecheck falls es kein String ist; kein Check, ob es eine valide url ist
+                */
+                
+                if (typeof(src) == "string") 
+                {
+                    console.log ("lade im Hintergrund:" + src)
+                    var zielframe = document.getElementsByClassName("Hintergrund")[0];
+                    zielframe.classList.remove("geladen");
+                    zielframe.onload = function () {zielframe.classList.add("geladen"); console.log("frame geladen")};
+                    zielframe.src = src;
+                }
+                else if (src != "") 
+                {
+                   // document.getElementsByClassName("Hintergrund").
+                }
+            }
+
+            function inHintergrund (frm) {
+                frm.classList.remove("Vordergrund");
+                frm.classList.add("Hintergrund");
+            }
+
+            function inVordergrund (frm) {
+                frm.classList.remove("Hintergrund");
+                frm.classList.add("Vordergrund");
+                frm.classList.remove("geladen");
+            }
+
+            function naechsteSeite () {
+                if ( SeitenPointer == Seiten.length - 1 ) {
+                    SeitenPointer = 0;
+                }
+                else {
+                    SeitenPointer++;
+                }
+                return Seiten[SeitenPointer];
+            }
+            
+            function iframe_setLocation (frame,location) {
+                document.getElementById(frame).src = location;
+            }
+
+            function circle_stop () {
+                clearInterval(interval_);
+            }
+
+        </script>
+    </head>
+    <body>
+        <div id="rahmen">
+            <iframe id="iframe1" class="iframes Vordergrund" src=""  scrolling="no">
+                
+            </iframe>
+            <iframe id="iframe2" class="iframes Hintergrund" src="" scrolling="no">
+
+            </iframe>
+            <iframe id="iframe_externes" class="iframes" src="" scrolling="no">
+
+            </iframe>
+        </div>
+        <!-- d212224273637 09 16 21 2749 40 50
+        262724131538 [28.10. gespeichert ddd
+    </body>
+</html>

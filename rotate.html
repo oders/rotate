@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<!--
+
+Rotates through a series of WhatsUp Gold web views after a specified per-page time interval
+
+Written By: Craig LaHote, Visual Construction Media, LLC.
+
+Released in the public domain 1/7/2015
+
+Usage:
+Determine the workspace ID of each page you wish to display.  The easiest way to do this is to click on the item from the WUG menu and look in the browser's URL window.  The ID will be at the end of the line.  For example, it might end with:  nWorkspaceID=12345.
+Then in the dashboards->url: section below, enter just the numbers for each page to display, followed by the number of seconds to delay before moving
+onto the next page.  If you add or delete items, ensure that each one ends with a comma except the last one in the list.
+
+Notes:
+Script assumes a modified HomeWorkspace asp page is in place that removes menu headers and other items to
+allow for a full-screen NOC-style display.
+To use the stock display, change the Prefix variable per the comments below
+
+Warning: the username and password are submitted in clear text and visible in the browser.  It is recommended
+that a separate WUG user be setup that only has read-access to the web views for this purpose.
+
+-->
+
+
+<html lang="en">
+<head>
+<title>WEB PAGE TITLE GOES HERE</title>
+
+<style type="text/css">
+body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+iframe { border: none; }
+</style>
+
+<script type="text/javascript">
+
+function expandURL(WorkspaceID) {
+	return Prefix + WorkspaceID + Suffix;
+}
+
+
+var UserName = "someuser"; // Will be visible in the browser URL window!
+var Password = "password"; // Ditto!
+
+// Prefix variable assumes a modified web view page is in place.  To use the stock page instead, comment out the first line, and remove
+// the comments from the line following
+// In either case, adjust the URL to reflect the actual server for your installation.
+var Prefix = "http://wug.yourcompany.com/NmConsole/Workspace/HomeWorkspace/HomeWorkspaceNOC.asp?HomeWorkspaceNOC.nWorkspaceID=";
+//var Prefix = "http://wug.yourcompany.com/NmConsole/Workspace/HomeWorkspace/HomeWorkspace.asp?HomeWorkspace.nWorkspaceID=";
+
+var Suffix = "&UserName=" + UserName + "&Password=" + Password + "&RememberMe=true&X-Requested-With=XMLHttpRequest";
+
+var Dash = {
+    nextIndex: 0,
+
+    dashboards: [
+        {url: expandURL("10068"), time: 45}, // WorkspaceID of the page to display, time in seconds to display the page
+        {url: expandURL("10067"), time: 30},
+        {url: expandURL("10069"), time: 30},
+        {url: expandURL("10070"), time: 20},
+        {url: expandURL("10055"), time: 30},
+        {url: expandURL("10073"), time: 15},
+        {url: expandURL("10072"), time: 30},
+        {url: expandURL("10065"), time: 20},
+        {url: expandURL("10066"), time: 20}
+    ],
+
+    display: function()
+    {
+        var dashboard = Dash.dashboards[Dash.nextIndex];
+        frames["displayArea"].location.href = dashboard.url;
+        Dash.nextIndex = (Dash.nextIndex + 1) % Dash.dashboards.length;
+        setTimeout(Dash.display, dashboard.time * 1000);
+    }
+};
+
+window.onload = Dash.display;
+</script>
+</head>
+
+<body>
+<iframe name="displayArea" width="100%" height="100%"></iframe>
+</body>
+
+</html>

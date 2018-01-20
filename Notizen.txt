@@ -1,0 +1,35 @@
+https://www.datenreise.de/raspberry-pi-remote-desktop-xrdp-installieren/
+http://www.gieseke-buch.de/raspberrypi/vom-windows-pc-per-remotedesktop-den-raspberry-pi-desktop-steuern
+http://www.it-adviser.net/raspberry-pi-bildschirmausgabe-ueber-ssh/ 
+
+Eduroam/WLAN herstellen
+
+Inhalte abholen (z.B. alle 15 min.) laut inhalte.txt
+-> Check, ob Internetverbindung
+-> wenn Fehler, alte verwenden? Nur bei Timeout?
+-> Indikator?
+-> get inhalte.txt
+-> in Variablen bzw. Datenbank speichern
+für jede Zeile: -> get inhalt
+-> in Variablen bzw. Datenbank speichern
+
+Rotationssript
+-> <html> Code einbinden können
+-> interne "Datenbank" (naja, schon im Browser speichern) der Seiten
+-> 
+
+Energiesparen Anzeige ab (Nachts, WE)
+
+Bootup einrichten (Startseite)
+
+Konfigurationseinheit (Text-Tabelle inhalte.txt)
+- Erreichbarkeit von außen (SSH-Server, Konf.-Dateien runterladen)
+
+"Leere" Seiten überspringen
+
+Anfangsinhalte
+
+Tab:
+    URL/Dateiname | Dauer | (opt. Skript)
+
+Dokumentation    

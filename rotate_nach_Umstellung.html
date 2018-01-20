@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <style>
+
+        #configscreen {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #rahmen{
+            position:absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        #iframe1{
+            z-index: 1;
+        }
+        
+        #iframe2{
+            z-index: 2;
+        }
+        
+        #iframe_externes{
+            z-index: 0;
+            display: none;
+        }
+
+        .Vordergrund {
+            z-index: 5;
+        }
+
+        .Hintergrund {
+            z-index: 1;
+            display: none;
+        }
+
+        .iframes {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        </style>
+        <!-- periodisches Update der Konfiguration -->
+        <script src = "Konfiguration.js" id="config_Script"></script>
+        <script src="config_imp.js"></script>
+        <script>
+
+            /** Festlegung der Parameter */
+            var CONFIGDATEI = "Konfiguration.js"; // Datei mit der Seitenliste
+            var CONFIGINTERVAL = 40000; // Alle x Sekunden wird die Seitenliste abgerufen
+            
+            /* Anzeigezeit der aktuellen Seite */
+            var standarddelay = 3000; 
+
+
+            /* Init */
+            //var Seiten = new Array("page1.htm","page2.htm","page3.htm","http://www.uni-greifswald.de");
+            var SeitenPointer = -1;
+            var interval_ = "";
+            var delay = standarddelay;
+            var init = function () {
+                var iframe1 = document.getElementById("iframe1");
+                var iframe2 = document.getElementById("iframe2");
+                var frame_externes = document.getElementById("iframe_externes");
+                iframe1.src=naechsteSeite().src;
+                inVordergrund(iframe1);
+                //interval_ = setInterval(circle,delay);
+                circle();
+            }
+            window.onload = init;
+
+            var timeout_ = ""; // gobales timeoutobjekt für die seitenrotation
+
+            function circle() {
+
+                // Welches ist die im nächsten Zyklus anzuzeigende Seite und was ist deren Delay?
+                neueSeite = naechsteSeite();
+                clearTimeout(timeout_);
+                timeout_ = setTimeout (circle,delay);
+                delay = neueSeite.seitendelay >= 10 || neueSeite.seitendelay == 5 ? neueSeite.seitendelay : standarddelay;
+                
+                console.log("naechste Seite:" + neueSeite.src, "dealy:" + delay);
+                
+                // Wechseln der Anzeige auf aktuellen Seite
+                if (iframe1.classList.contains("Vordergrund") && iframe2.classList.contains("geladen") ) {
+                    /* 
+                        iframe1 ist im Vordergrund.
+                        -> mache iframe2 in den Vordergrund
+                        -> mache iframe1 in den Hintergrund
+                        -> lade die nächste Seite im Hintergrund
+                    */ 
+                    console.log("2");
+                    inHintergrund(iframe1);
+                    inVordergrund(iframe2);
+                    
+                } 
+                else if (iframe2.classList.contains("Vordergrund") && iframe1.classList.contains("geladen")) {
+                    // Umgekehrt
+                    console.log("1");
+                    inHintergrund(iframe2);
+                    inVordergrund(iframe1);
+                }
+                else {
+                    // Fehler beim Vorladen
+                    // TODO Meldung, wohin auch immer, geben
+                    console.log ("Fehler: Kein vorgeladener iframe um dahin zu wechseln. \n iframe1.geladen = " + iframe1.classList.contains("geladen") + ", iframe2.geladen = " + iframe2.classList.contains("geladen"));
+                }
+
+                //Vorladen der nächsten Seite
+                hintergrundladen(neueSeite.src);
+
+            }
+
+            
+            var update_Interval = window.setInterval (
+                function() {console.log("interval"); loadScript(CONFIGDATEI)},CONFIGINTERVAL
+            );
+            
+
+
+            function hintergrundladen (src,zielframe) {
+                /* Je nach dem, ob ein String (eine url) oder ein Objekt übergeben wurde, mit der passenden Methode den Hintergrundframe vorladen. 
+                   ungenau: Typecheck falls es kein String ist; kein Check, ob es eine valide url ist
+                */
+                
+                if (typeof(src) == "string") 
+                {
+                    console.log ("lade im Hintergrund:" + src)
+                    var zielframe = document.getElementsByClassName("Hintergrund")[0];
+                    zielframe.classList.remove("geladen");
+                    zielframe.onload = function () {zielframe.classList.add("geladen"); console.log("frame "+src+" vorgeladen")};
+                    zielframe.src = src;
+                }
+                else if (src != "") 
+                {
+                   // document.getElementsByClassName("Hintergrund").
+                }
+            }
+
+            function inHintergrund (frm) {
+                frm.classList.remove("Vordergrund");
+                frm.classList.add("Hintergrund");
+            }
+
+            function inVordergrund (frm) {
+                frm.classList.remove("Hintergrund");
+                frm.classList.add("Vordergrund");
+                frm.classList.remove("geladen");
+            }
+
+            function naechsteSeite () {
+                if ( SeitenPointer == seitenliste.length - 1 ) {
+                    SeitenPointer = 0;
+                }
+                else {
+                    SeitenPointer++;
+                } 
+                if (typeof(seitenliste[SeitenPointer][0]) == typeof("bla") && seitenliste[SeitenPointer][0].length > 4) {
+                    var delay_ = seitenliste[SeitenPointer][1] > 0 ? seitenliste[SeitenPointer][1] : 0;
+                    return { src: seitenliste[SeitenPointer][0],
+                                  seitendelay:  delay_};
+                }
+                else {
+                    console.log ("FEHLER! " + seitenliste[SeitenPointer][0] + " aus der Konfigurationsdatei ist keine Url, soll aber als solche geladen werden.");
+                    return { src: "", seitendelay: 5}
+                }
+            }
+            
+            function iframe_setLocation (frame,location) {
+                document.getElementById(frame).src = location;
+            }
+
+            function circle_stop () {
+                clearTimeout(timeout_);
+                //clearInterval(interval_);
+            }
+
+        </script>
+        
+    </head>
+    <body>
+        <div id="rahmen">
+            <iframe id="iframe1" class="iframes Vordergrund" src=""  scrolling="no">
+                
+            </iframe>
+            <iframe id="iframe2" class="iframes Hintergrund" src="" scrolling="no">
+
+            </iframe>
+            <iframe id="iframe_externes" class="iframes" src="" scrolling="no">
+
+            </iframe>
+        </div>
+
+    </body>
+</html>
