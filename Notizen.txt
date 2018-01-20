@@ -17,7 +17,7 @@ Rotationssript
 -> <html> Code einbinden können
 -> interne "Datenbank" (naja, schon im Browser speichern) der Seiten
 -> 
-a
+
 Energiesparen Anzeige ab (Nachts, WE)
 
 Bootup einrichten (Startseite)

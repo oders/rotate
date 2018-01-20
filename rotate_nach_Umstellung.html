@@ -52,7 +52,7 @@
         }
 
         </style>
-        <!-- periodisches Update der Konfiguration -->
+        <!-- periodisches Update der Konfiguration sprich Seitenliste -->
         <script src = "Konfiguration.js" id="config_Script"></script>
         <script src="config_imp.js"></script>
         <script>
@@ -61,7 +61,7 @@
             var CONFIGDATEI = "Konfiguration.js"; // Datei mit der Seitenliste
             var CONFIGINTERVAL = 40000; // Alle x Sekunden wird die Seitenliste abgerufen
             
-            /* Anzeigezeit der aktuellen Seite */
+            /* Anzeigezeit einer Seite, sofern in der Konfigurationsdatei nichts anderes angegeben ist */
             var standarddelay = 3000; 
 
 
@@ -71,6 +71,7 @@
             var interval_ = "";
             var delay = standarddelay;
             var init = function () {
+                if typeof(Seitenliste)
                 var iframe1 = document.getElementById("iframe1");
                 var iframe2 = document.getElementById("iframe2");
                 var frame_externes = document.getElementById("iframe_externes");
@@ -161,19 +162,19 @@
             }
 
             function naechsteSeite () {
-                if ( SeitenPointer == seitenliste.length - 1 ) {
+                if ( SeitenPointer == Seitenliste.length - 1 ) {
                     SeitenPointer = 0;
                 }
                 else {
                     SeitenPointer++;
                 } 
-                if (typeof(seitenliste[SeitenPointer][0]) == typeof("bla") && seitenliste[SeitenPointer][0].length > 4) {
-                    var delay_ = seitenliste[SeitenPointer][1] > 0 ? seitenliste[SeitenPointer][1] : 0;
-                    return { src: seitenliste[SeitenPointer][0],
+                if (typeof(Seitenliste[SeitenPointer][0]) == typeof("bla") && Seitenliste[SeitenPointer][0].length > 4) {
+                    var delay_ = Seitenliste[SeitenPointer][1] > 0 ? Seitenliste[SeitenPointer][1] : 0;
+                    return { src: Seitenliste[SeitenPointer][0],
                                   seitendelay:  delay_};
                 }
                 else {
-                    console.log ("FEHLER! " + seitenliste[SeitenPointer][0] + " aus der Konfigurationsdatei ist keine Url, soll aber als solche geladen werden.");
+                    console.log ("FEHLER! " + Seitenliste[SeitenPointer][0] + " aus der Konfigurationsdatei ist keine Url, soll aber als solche geladen werden.");
                     return { src: "", seitendelay: 5}
                 }
             }
