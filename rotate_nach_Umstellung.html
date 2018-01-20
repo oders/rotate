@@ -135,24 +135,35 @@
                 if (typeof(src) == "string") 
                 {
                     console.log ("lade im Hintergrund:" + src)
-                    var zielframe = document.getElementsByClassName("Hintergrund")[0];
+                    zielframe = document.getElementsByClassName("Hintergrund")[0];
                     zielframe.classList.remove("geladen");
-                    zielframe.onload = function () {zielframe.classList.add("geladen"); console.log("frame "+src+" vorgeladen")};
+                    zielframe.onload = function () {
+                        zielframe.classList.add("geladen"); console.log("frame "+zielframe.src+" vorgeladen", zielframe.contentDocument.scripts, zielframe.contentDocument.location);
+                        var zielframeDocument_ = zielframe.contentDocument || zielframe.contentWindow.document;
+                        addskript(zielframeDocument_);
+                    }
                     zielframe.src = src;
 
                     /* Falls konfiguriert, Script einfügen und Seite manipulieren */
-                    if (skript.length > 0) {
-                        console.log ("lade Skript");
-                        (function(d, script) {
-                            script = d.createElement('script');
-                            script.type = 'text/javascript';
-                            script.async = true;
-                            script.onload = function(){
-                                // remote script has loaded
-                            };
-                            script.src = skript;
-                            d.getElementsByTagName('head')[0].appendChild(script);
-                        }(zielframe.contentWindow.document));
+                    function addskript(zielframeDocument) {
+                        console.log("addskript!");
+                        console.log(zielframeDocument);
+                        if (skript.length > 0) {
+                            console.log ("lade Skript");
+                            (function(d, script) {
+                                script = d.createElement('script');
+                                script.type = 'text/javascript';
+                                script.async = true;
+                                script.onload = function(){
+                                    console.log("Skript " + skript + " geladen", zielframeDocument.scripts);
+                                    // remote script has loaded
+                                };
+                                script.src = skript;
+                                d.getElementsByTagName('head')[0].appendChild(script);
+                            }(zielframeDocument));
+                            //zielframe.window.eval('console.log(this.location)');
+                            circle_stop();
+                        }
                     }
                 }
                 else if (src != "") 
