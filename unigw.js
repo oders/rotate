@@ -1,8 +1,11 @@
-var outputContent = function() {
+/*
+    Beispiel-Injektions-Skript:
+    
+    Footer und Header der Uniseite werden ausgeblendet.
 
-    var html_ = this.scripts    ; //document.body.innerHTML;
-    console.log("html", html_);
-    var rahmen = document.getElementsByClassName("main-content")[0];
+*/
+
+var outputContent = function() {
 
     /* Elemente ausblenden */
     var Ausgeblendete = [];
@@ -17,9 +20,12 @@ var outputContent = function() {
             el.style.display = "none";
         }
     }
-    
+
     displayNone(document.getElementsByTagName("Header")[0]);
+    displayNone(document.getElementsByTagName("Footer")[0]);
     //console.log(rahmen);
+    
+    //var rahmen = document.getElementsByClassName("main-content")[0];
     //var neuerInhalt = document.getElementById("c1044877").innerHTML;
     //rahmen.innerHTML = neuerInhalt;
     //document.body.innerHTML = neuerInhalt;
