@@ -23,12 +23,6 @@ var outputContent = function() {
 
     displayNone(document.getElementsByTagName("Header")[0]);
     displayNone(document.getElementsByTagName("Footer")[0]);
-    //console.log(rahmen);
-    
-    //var rahmen = document.getElementsByClassName("main-content")[0];
-    //var neuerInhalt = document.getElementById("c1044877").innerHTML;
-    //rahmen.innerHTML = neuerInhalt;
-    //document.body.innerHTML = neuerInhalt;
 
 }
 
