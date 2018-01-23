@@ -150,15 +150,17 @@
                         console.log(zielframeDocument);
                         if (skript.length > 0) {
                             console.log ("lade Skript");
-                            (function(d, script) {
+                            (function(d) {
                                 script = d.createElement('script');
                                 script.type = 'text/javascript';
                                 script.async = true;
                                 script.onload = function(){
                                     console.log("Skript " + skript + " geladen", zielframeDocument.scripts);
+                                    var lokaleSkriptUrl = this.parent.location.href.replace(/[^\\\/]*$/, '');
+                                    console.log("Skript Url: ", lokaleSkriptUrl);
                                     // remote script has loaded
                                 };
-                                script.src = skript;
+                                script.src = lokaleSkriptUrl;
                                 d.getElementsByTagName('head')[0].appendChild(script);
                             }(zielframeDocument));
                             //zielframe.window.eval('console.log(this.location)');
@@ -181,6 +183,13 @@
                 frm.classList.remove("Hintergrund");
                 frm.classList.add("Vordergrund");
                 frm.classList.remove("geladen");
+            }
+
+            function getLokaleUrl (location, url) {
+                /* fügt den Pfad des Rahmendocuments vor einer url an * -> file:///c:/.../* */
+                console.log("Erstelle lokaleSkriptUrl aus: ",location,url);
+                return this.parent.location.href.replace(/[^\\\/]*$/, '');
+                
             }
 
             function naechsteSeite () {
