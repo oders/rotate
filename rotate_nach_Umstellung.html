@@ -156,10 +156,10 @@
                                 script.async = true;
                                 script.onload = function(){
                                     console.log("Skript " + skript + " geladen", zielframeDocument.scripts);
-                                    var lokaleSkriptUrl = this.parent.location.href.replace(/[^\\\/]*$/, '');
-                                    console.log("Skript Url: ", lokaleSkriptUrl);
                                     // remote script has loaded
                                 };
+                                var lokaleSkriptUrl = this.parent.location.href.replace(/[^\\\/]*$/, '') + skript;
+                                console.log("Skript Url: ", lokaleSkriptUrl);
                                 script.src = lokaleSkriptUrl;
                                 d.getElementsByTagName('head')[0].appendChild(script);
                             }(zielframeDocument));
