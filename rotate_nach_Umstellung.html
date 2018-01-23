@@ -118,6 +118,7 @@
                 //Vorladen der nächsten Seite
                 hintergrundladen(neueSeite.src,"",neueSeite.skript);
 
+                circle_stop(); //D
             }
 
             
@@ -130,6 +131,8 @@
             function hintergrundladen (src,zielframe,skript) {
                 /* Je nach dem, ob ein String (eine url) oder ein Objekt übergeben wurde, mit der passenden Methode den Hintergrundframe vorladen. 
                    ungenau: Typecheck falls es kein String ist; kein Check, ob es eine valide url ist
+                   
+                   Das Skript einfügen, falls vorhanden
                 */
                 
                 if (typeof(src) == "string") 
@@ -144,11 +147,11 @@
                     }
                     zielframe.src = src;
 
-                    /* Falls konfiguriert, Script einfügen und Seite manipulieren */
+                    /* Falls in der Konfiguration vorhanden, Script einfügen und Seite manipulieren */
                     function addskript(zielframeDocument) {
-                        console.log("addskript!");
-                        console.log(zielframeDocument);
-                        if (skript.length > 0) {
+                        console.log("addskript!"); //D
+                        console.log(zielframeDocument); //D
+                        if (skript.length > 5) { // 5 ist beliebig
                             console.log ("lade Skript");
                             (function(d) {
                                 script = d.createElement('script');
@@ -158,13 +161,14 @@
                                     console.log("Skript " + skript + " geladen", zielframeDocument.scripts);
                                     // remote script has loaded
                                 };
-                                var lokaleSkriptUrl = this.parent.location.href.replace(/[^\\\/]*$/, '') + skript;
-                                console.log("Skript Url: ", lokaleSkriptUrl);
+
+                                // Baue die URL zum lokalen Skript aus dem Pfad des Rahmendokumentes und dem Dateinamen zusammen: file:///...*
+                                var lokaleSkriptUrl = this.parent.location.href.replace(/[^\\\/]*$/, '')+skript;
+                                console.log("Skript Url: ", lokaleSkriptUrl); //D
                                 script.src = lokaleSkriptUrl;
+
                                 d.getElementsByTagName('head')[0].appendChild(script);
                             }(zielframeDocument));
-                            //zielframe.window.eval('console.log(this.location)');
-                            circle_stop();
                         }
                     }
                 }
@@ -183,13 +187,6 @@
                 frm.classList.remove("Hintergrund");
                 frm.classList.add("Vordergrund");
                 frm.classList.remove("geladen");
-            }
-
-            function getLokaleUrl (location, url) {
-                /* fügt den Pfad des Rahmendocuments vor einer url an * -> file:///c:/.../* */
-                console.log("Erstelle lokaleSkriptUrl aus: ",location,url);
-                return this.parent.location.href.replace(/[^\\\/]*$/, '');
-                
             }
 
             function naechsteSeite () {
