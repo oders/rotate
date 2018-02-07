@@ -34,10 +34,13 @@
 
         .Vordergrund {
             z-index: 5;
+            width: 100%;
+            transition: width 1.5s ease-in;
         }
 
         .Hintergrund {
             z-index: 1;
+            width: 0%;
             display: none;
         }
 
@@ -118,10 +121,11 @@
                 //Vorladen der nächsten Seite
                 hintergrundladen(neueSeite.src,"",neueSeite.skript);
 
-                circle_stop(); //D
+                //circle_stop(); //D
             }
 
             
+            /* Regelmäßiges neu-Einlesen der Konfiguration */
             var update_Interval = window.setInterval (
                 function() {console.log("interval"); loadScript(CONFIGDATEI)},CONFIGINTERVAL
             );

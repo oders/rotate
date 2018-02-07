@@ -33,3 +33,11 @@ Tab:
     URL/Dateiname | Dauer | (opt. Skript)
 
 Dokumentation    
+
+Todo:
+- Auch halb geladene Seiten werden schon angezeigt
+- 'X-Frame-Options' to 'sameorigin' Problem lösen -> Addon?
+- fehlerhafte Urls
+- filtern kaputter Seiten
+- Überfaden
+- Zoomfaktor
